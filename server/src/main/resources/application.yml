@@ -1,0 +1,67 @@
+server.port: 9100
+server.servlet.context-path: /api
+
+BASE_LOCATION: E:\毕业\PTproject
+DB_NAME: java_food
+
+
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/${DB_NAME}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    # 连接池的配置信息
+    druid:
+      initial-size: 5
+      min-idle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall,slf4j
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      # DruidStatViewServlet
+      stat-view-servlet:
+        allow: 127.0.0.1
+        reset-enable: false
+        login-username: admin
+        login-password: '123'
+        url-pattern: "/druid/*"
+        enabled: true
+
+  # 文件上传大小限制
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 1MB
+      location: ${BASE_LOCATION}\server\upload\tmp
+      enabled: true
+
+  # 静态资源路径（上传的图片通过 /staticfiles/** 访问）
+  mvc:
+    static-path-pattern: /staticfiles/**
+  web:
+    resources:
+      static-locations: file:${BASE_LOCATION}\server\upload
+
+
+File:
+  uploadPath: ${BASE_LOCATION}\server\upload
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

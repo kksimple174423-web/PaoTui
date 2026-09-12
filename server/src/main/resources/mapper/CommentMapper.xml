@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gk.study.mapper.CommentMapper">
+
+    <!-- 全部评价（管理端） -->
+    <select id="getList" resultType="com.gk.study.entity.Comment">
+        select A.*, U.nickname as username, U.avatar, C.title, C.cover
+        from b_comment as A
+                 left join b_user as U on (A.from_user_id = U.id)
+                 left join b_task as C on (A.task_id = C.id)
+        order by A.comment_time desc;
+    </select>
+
+    <!-- 某个任务下的评价 -->
+    <select id="selectTaskCommentList" parameterType="map" resultType="com.gk.study.entity.Comment">
+        select A.*, U.nickname as username, U.avatar, C.title, C.cover
+        from b_comment as A
+                 left join b_user as U on (A.from_user_id = U.id)
+                 left join b_task as C on (A.task_id = C.id)
+        <where>
+            <if test="taskId != null and taskId != ''">A.task_id = #{taskId}</if>
+        </where>
+        <choose>
+            <when test="order == 'hot'">order by A.like_count desc</when>
+            <otherwise>order by A.comment_time desc</otherwise>
+        </choose>
+    </select>
+
+    <!-- 我发出的评价 -->
+    <select id="selectUserCommentList" parameterType="map" resultType="com.gk.study.entity.Comment">
+        select A.*, U.nickname as username, U.avatar, C.title, C.cover
+        from b_comment as A
+                 left join b_user as U on (A.from_user_id = U.id)
+                 left join b_task as C on (A.task_id = C.id)
+        <where>
+            <if test="userId != null and userId != ''">A.from_user_id = #{userId}</if>
+        </where>
+        order by A.comment_time desc;
+    </select>
+
+    <!-- 我收到的评价 -->
+    <select id="selectReceivedCommentList" parameterType="map" resultType="com.gk.study.entity.Comment">
+        select A.*, U.nickname as username, U.avatar, C.title, C.cover
+        from b_comment as A
+                 left join b_user as U on (A.from_user_id = U.id)
+                 left join b_task as C on (A.task_id = C.id)
+        <where>
+            <if test="userId != null and userId != ''">A.to_user_id = #{userId}</if>
+        </where>
+        order by A.comment_time desc;
+    </select>
+
+</mapper>

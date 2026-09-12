@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "▶ 一键启动（前端+后端）",
+      "dependsOn": ["启动后端 Spring Boot", "启动前端 Vite"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "启动后端 Spring Boot",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-B", "spring-boot:run"],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "group": "campus"
+      }
+    },
+    {
+      "label": "启动前端 Vite",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/web"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always",
+        "group": "campus"
+      }
+    },
+    {
+      "label": "安装前端依赖（首次运行）",
+      "type": "shell",
+      "command": "npm",
+      "args": ["install", "--registry=https://registry.npmmirror.com"],
+      "options": {
+        "cwd": "${workspaceFolder}/web"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "后端打包（生成可执行 jar）",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-B", "clean", "package", "-DskipTests"],
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

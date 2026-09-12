@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gk.study.mapper.OrderMapper">
+
+    <!-- 全部订单（管理端） -->
+    <select id="getList" resultType="com.gk.study.entity.Order">
+        select A.*,
+               U.nickname as publisherName, U.username,
+               R.nickname as runnerName,
+               T.title, T.cover, T.pickup_address, T.delivery_address
+        from b_order as A
+                 left join b_user as U on (A.publisher_id = U.id)
+                 left join b_user as R on (A.runner_id = R.id)
+                 left join b_task as T on (A.task_id = T.id)
+        order by A.order_time desc;
+    </select>
+
+    <!-- 订单列表（可按用户/骑手/状态过滤） -->
+    <select id="getUserOrderList" resultType="com.gk.study.entity.Order">
+        select A.*,
+               U.nickname as publisherName, U.username,
+               R.nickname as runnerName,
+               T.title, T.cover, T.pickup_address, T.delivery_address
+        from b_order as A
+                 left join b_user as U on (A.publisher_id = U.id)
+                 left join b_user as R on (A.runner_id = R.id)
+                 left join b_task as T on (A.task_id = T.id)
+        where 2>1
+        <if test="userId != null and userId != ''">
+            and A.publisher_id = #{userId}
+        </if>
+        <if test="runnerId != null and runnerId != ''">
+            and A.runner_id = #{runnerId}
+        </if>
+        <if test="status != null and status != ''">
+            and A.status = #{status}
+        </if>
+        order by A.order_time desc;
+    </select>
+
+</mapper>
